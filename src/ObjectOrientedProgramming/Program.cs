@@ -1,8 +1,11 @@
 ﻿using ObjectOrientedProgramming.Animals;
+using ObjectOrientedProgramming.Notifications;
+using ObjectOrientedProgramming.Payments;
+using ObjectOrientedProgramming.Repositories;
 
 namespace ObjectOrientedProgramming
 {
-    internal class Program
+    internal static class Program
     {
         static void Main(string[] args)
         {
@@ -24,6 +27,17 @@ namespace ObjectOrientedProgramming
         /// </summary>
         private static void Abstraction()
         {
+            Console.WriteLine(nameof(Abstraction).ToUpper());
+
+            IEntityRepository repository = new EntityCosmosRepository();
+
+            Console.WriteLine(repository.GetType().Name);
+
+            repository = new EntityMongoRepository();
+
+            Console.WriteLine(repository.GetType().Name);
+
+            Console.WriteLine();
         }
 
         #endregion
@@ -74,6 +88,22 @@ namespace ObjectOrientedProgramming
         /// </summary>
         private static void DependencyInjection()
         {
+            Console.WriteLine(nameof(DependencyInjection).ToUpper());
+
+            new PaymentService(new Cash()).Pay(1000);
+            new EmailNotification().Notify(new EmailMessage("To", "Subject", "Body"));
+            new SmsNotification().Notify(new SmsMessage("Number", "Body"));
+
+            new PaymentService(new CreditCard()).Pay(1000);
+            new SmsNotification().Notify(new SmsMessage("Number", "Body"));
+
+            new PaymentService(new CreditCard()).Pay(2000);
+            new EmailNotification().Notify(new EmailMessage("To", "Subject", "Body"));
+
+            new PaymentService(new DebitCard()).Pay(1000);
+            new SmsNotification().Notify(new SmsMessage("Number", "Body"));
+
+            Console.WriteLine();
         }
 
         #endregion
@@ -85,6 +115,15 @@ namespace ObjectOrientedProgramming
         /// </summary>
         private static void Polymorphism()
         {
+            Console.WriteLine(nameof(Polymorphism).ToUpper());
+
+            foreach (var animal in Animals)
+            {
+                Console.WriteLine($"Animal: {animal.Name}");
+                Console.WriteLine($"Move: {animal.Move()}");
+                Console.WriteLine($"Sound: {animal.Sound()}");
+                Console.WriteLine();
+            }
         }
 
         #endregion
